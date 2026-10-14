@@ -1,0 +1,81 @@
+<html lang="en">
+  <head>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .background canvas {
+            display: block;
+        }
+
+        .background{
+            opacity:1;
+            background-color:#ffffff;
+            position:fixed;
+            width:100%;
+            height:100%;
+            top:0px;
+            left:0px;
+            z-index:1000;
+        }
+    </style>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="background" id="background"></div>
+    <script src="js/matter.js"></script>
+    <script>
+        // module aliases
+        let Engine = Matter.Engine,
+            Render = Matter.Render,
+            Runner = Matter.Runner,
+            Bodies = Matter.Bodies,
+            Composite = Matter.Composite;
+
+        // create an engine
+        let engine = Engine.create();
+
+        // create renderer
+        let render = Render.create({
+            element: document.getElementById("background"),
+            engine: engine,
+            options: {
+                width: window.innerWidth,
+                height: window.innerHeight,
+                wireframes: false,
+                background: "transparent"
+            }
+        });
+
+        // create two boxes and a ground
+        let boxA = Bodies.rectangle(window.innerWidth/2, 200, 80, 80);
+        let boxB = Bodies.rectangle(window.innerWidth/2, 50, 80, 80);
+        let ground = Bodies.rectangle(window.innerWidth/2, window.innerHeight, window.innerWidth, 100, { isStatic: true });
+
+        // add all of the bodies to the world
+        Composite.add(engine.world, [boxA, boxB, ground]);
+
+        // run the renderer
+        Render.run(render);
+
+        // create runner
+        let runner = Runner.create();
+
+        // run the engine
+        Runner.run(runner, engine);
+
+        // add this to rescale the window
+        window.addEventListener("resize", () => {
+            Render.setSize(render, window.innerWidth, window.innerHeight);
+        });
+    </script>
+  </body>
+</html>
